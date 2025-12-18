@@ -419,8 +419,9 @@
         document.getElementById('canvas-container').appendChild(renderer.domElement);
         
         // Create particles - ORIGINAL COLORS with ENHANCED NEON
-        const particlesCount = 2000; // More particles for better effect
-        
+        // Use fewer particles on mobile for better performance
+        const isMobile = window.innerWidth <= 768;
+        const particlesCount = isMobile ? 1000 : 2000;
         const posArray = new Float32Array(particlesCount * 3);
         const colorArray = new Float32Array(particlesCount * 3);
         
@@ -952,6 +953,7 @@
     </script>
 </body>
 </html>
+
 
 
 
