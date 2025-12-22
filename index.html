@@ -346,7 +346,7 @@
                 height: 95px;
             }
             .equation-display {
-                height: 150px;
+                height: 140px;
                 padding: 20px 25px;
             }
         }
@@ -377,7 +377,7 @@
                 font-size: 1rem;
             }
             .equation-display {
-                height: 140px;
+                height: 130px;
                 padding: 5px 5px;
             }    
             .footer-text {
@@ -409,15 +409,20 @@
     </div>
 
     <script>
-        // FIXED: Wrap Three.js init to run after DOM is ready — ONLY CHANGE MADE
-        function initApp() {
-            // Initialize Three.js scene for background — YOUR EXACT CODE
+        // FIXED: Wrap Three.js in try-catch and check DOM element exists - ONLY CHANGES MADE
+        try {
+            // Initialize Three.js scene for background
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
-            document.getElementById('canvas-container').appendChild(renderer.domElement);
+            
+            // CRITICAL FIX: Check if element exists before using it
+            const canvasContainer = document.getElementById('canvas-container');
+            if (canvasContainer) {
+                canvasContainer.appendChild(renderer.domElement);
+            }
             
             // Create particles - ORIGINAL COLORS with ENHANCED NEON
             // Use fewer particles on mobile for better performance
@@ -448,7 +453,7 @@
             // Create 3 particle systems with different sizes - ENHANCED FOR NEON
             // Small particles (35% of total)
             const smallParticlesMaterial = new THREE.PointsMaterial({
-                size: 0.05, // Slightly larger for better neon visibility
+                size: 0.04, // Slightly larger for better neon visibility
                 vertexColors: true,
                 transparent: true,
                 opacity: 0.9, // Higher opacity for neon glow
@@ -468,7 +473,7 @@
             
             // Large particles (5% of total)
             const largeParticlesMaterial = new THREE.PointsMaterial({
-                size: 0.07, // Even larger for special glow effect
+                size: 0.08, // Even larger for special glow effect
                 vertexColors: true,
                 transparent: true,
                 opacity: 0.8, // Slightly transparent for glow effect
@@ -611,354 +616,350 @@
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
             });
+        } catch (error) {
+            // If Three.js fails, CSS particles still work
+            console.warn('Three.js initialization failed, CSS particles will still work');
+        }
+        
+        // Floating particles - ORIGINAL COLORS with NEON ENHANCEMENT
+        const createFloatingParticles = () => {
+            const container = document.body;
+            const particleCount = 8;
             
-            // Floating particles - ORIGINAL COLORS with NEON ENHANCEMENT
-            const createFloatingParticles = () => {
-                const container = document.body;
-                const particleCount = 8;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
                 
-                for (let i = 0; i < particleCount; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    
-                    // Particle properties
-                    const posX = Math.random() * 100;
-                    particle.style.left = `${posX}%`;
-                    particle.style.bottom = '-50px';
-                    particle.style.setProperty('--direction', Math.random() > 0.5 ? 1 : -1);
-                    
-                    // Size variation
-                    const size = 2 + Math.random() * 2;
-                    particle.style.width = `${size}px`;
-                    particle.style.height = `${size}px`;
-                    
-                    // ORIGINAL BLUE COLORS with neon enhancement
-                    const colorType = Math.random();
-                    if (colorType < 0.7) {
-                        // Main blue particles (70%)
-                        particle.style.background = 'rgba(79, 172, 254, 0.9)';
-                        particle.style.boxShadow = 
-                            '0 0 10px rgba(79, 172, 254, 0.8), ' +
-                            '0 0 20px rgba(79, 172, 254, 0.5), ' +
-                            '0 0 30px rgba(0, 242, 254, 0.3)';
-                    } else if (colorType < 0.9) {
-                        // Light blue particles (20%)
-                        particle.style.background = 'rgba(160, 210, 235, 0.9)';
-                        particle.style.boxShadow = 
-                            '0 0 10px rgba(160, 210, 235, 0.8), ' +
-                            '0 0 20px rgba(160, 210, 235, 0.5), ' +
-                            '0 0 30px rgba(160, 210, 235, 0.3)';
-                    } else {
-                        // Cyan accent particles (10%)
-                        particle.style.background = 'rgba(0, 242, 254, 0.9)';
-                        particle.style.boxShadow = 
-                            '0 0 15px rgba(0, 242, 254, 0.9), ' +
-                            '0 0 30px rgba(0, 242, 254, 0.6), ' +
-                            '0 0 45px rgba(0, 242, 254, 0.3)';
+                // Particle properties
+                const posX = Math.random() * 100;
+                particle.style.left = `${posX}%`;
+                particle.style.bottom = '-50px';
+                particle.style.setProperty('--direction', Math.random() > 0.5 ? 1 : -1);
+                
+                // Size variation
+                const size = 2 + Math.random() * 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // ORIGINAL BLUE COLORS with neon enhancement
+                const colorType = Math.random();
+                if (colorType < 0.7) {
+                    // Main blue particles (70%)
+                    particle.style.background = 'rgba(79, 172, 254, 0.9)';
+                    particle.style.boxShadow = 
+                        '0 0 10px rgba(79, 172, 254, 0.8), ' +
+                        '0 0 20px rgba(79, 172, 254, 0.5), ' +
+                        '0 0 30px rgba(0, 242, 254, 0.3)';
+                } else if (colorType < 0.9) {
+                    // Light blue particles (20%)
+                    particle.style.background = 'rgba(160, 210, 235, 0.9)';
+                    particle.style.boxShadow = 
+                        '0 0 10px rgba(160, 210, 235, 0.8), ' +
+                        '0 0 20px rgba(160, 210, 235, 0.5), ' +
+                        '0 0 30px rgba(160, 210, 235, 0.3)';
+                } else {
+                    // Cyan accent particles (10%)
+                    particle.style.background = 'rgba(0, 242, 254, 0.9)';
+                    particle.style.boxShadow = 
+                        '0 0 15px rgba(0, 242, 254, 0.9), ' +
+                        '0 0 30px rgba(0, 242, 254, 0.6), ' +
+                        '0 0 45px rgba(0, 242, 254, 0.3)';
+                }
+                
+                // Smooth animation
+                const duration = 15 + Math.random() * 20;
+                const delay = Math.random() * 5;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationTimingFunction = 'cubic-bezier(0.4, 0, 0.6, 1)';
+                
+                // Add neon pulse effect
+                particle.style.animation += ', neon-pulse 3s infinite alternate';
+                
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    @keyframes neon-pulse {
+                        0%, 100% { 
+                            opacity: 0.9; 
+                            filter: blur(0.5px) brightness(1);
+                        }
+                        50% { 
+                            opacity: 0.7; 
+                            filter: blur(0.8px) brightness(1.2);
+                        }
                     }
+                `;
+                document.head.appendChild(style);
+                
+                container.appendChild(particle);
+                
+                // Clean removal
+                setTimeout(() => {
+                    particle.remove();
+                    style.remove();
+                }, (duration + delay) * 1000);
+            }
+        };
+        
+        // Start floating particles
+        createFloatingParticles();
+        // Create new particles every 10 seconds
+        setInterval(createFloatingParticles, 10000);
+        
+        const equations = [
+            // Basic Arithmetic & Algebra
+            'a + b = b + a',
+            'a \\times (b + c) = a \\times b + a \\times c',
+            '(a + b)^2 = a^2 + 2ab + b^2',
+            '(a + b)^3 = a^3 + 3a^{2}b + 3ab^2 + b^3',
+            'a^2 - b^2 = (a + b)(a - b)',
+            'a^{-x} = \\dfrac{1}{a^{x}}, \\ a\\gt 0, \\ x\\in \\mathbb{R}',
+            'a^{x} \\times a^{y} = a^{x+y}, \\ a\\gt 0, \\ x,y\\in \\mathbb{R}',
+            '(a^{x})^{y} = a^{xy}, \\ a\\gt 0, \\ x,y\\in \\mathbb{R}',
+            
+            // Quadratic Formulas
+            'ax^{2} + bx + c = 0',
+            'x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
+            'ax^{4} + bx^{2} + c = 0',
+            'ma^{2x} + na^{x} + p = 0',
+            
+            // Geometry Basics
+            'a^2 + b^2 = c^2',
+            'S_{\\text{շրջան}} = \\pi R^{2}',
+            'C = 2\\pi R',
+            'V_{\\text{սֆերա}} = \\frac{4}{3}\\pi R^{3}',
+            'S_{\\triangle} = \\frac{1}{2}ah_{a}',
+            'S_{▭} = \\small \\text{երկարություն} \\times \\text{լայնություն}',
+            'l_{\\text{աղեղ}} = R\\alpha',
+            'S_{\\text{սեկտոր}} = \\frac{1}{2}Rl',
+            'V_{\\text{կոն}} = \\frac{1}{3}\\pi R^{2}h',
+            'V_{\\text{ուղղանկյունանիստ}} = a \\times b \\times c',
+            'V_{\\text{զուգահեռանիստ}} = S_{\\text{հիմք}} \\times h',
+            'V_{\\text{բուրգ}} = \\frac{1}{3} S_{\\text{հիմք}} \\times h',
+            'S_{\\text{գնդային մակերևույթ}} = 4\\pi R^{2}',
+            'S_{\\text{գլանի լրիվ մակերևույթ}} = 2\\pi R(R + h)',
+            
+            // Trigonometry
+            '\\sin^{2}\\alpha + \\cos^{2}\\alpha = 1',
+            '\\tg \\alpha = \\dfrac{\\sin \\alpha}{\\cos \\alpha}',
+            '\\sin(2\\alpha) = 2\\sin \\alpha \\cos \\alpha',
+            '\\cos(2\\alpha) = \\cos^{2}\\alpha - \\sin^{2}\\alpha',
+            '\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta',
+            '\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta',
+            '\\dfrac{a}{\\sin \\angle A} = \\dfrac{b}{\\sin \\angle B} = \\dfrac{c}{\\sin \\angle C}=2R',
+            'a^{2} = b^{2} + c^{2} - 2bc \\cos \\alpha',
+            'S_{\\triangle} = \\sqrt{p(p-a)(p-b)(p-c)}, \\ p = \\dfrac{a+b+c}{2}',
+            
+            // Logarithms
+            '\\log_{a}{b} = \\dfrac{\\log_{c}{b}}{\\log_{c}{a}}, \\ a, b, c > 0, \\ a, c \\neq 1',
+            
+            // Calculus Basics
+            '\\dfrac{d}{dx} x^{\\alpha} = \\alpha x^{\\alpha-1}, \\ \\alpha\\in\\mathbb{R}, \\ x\\gt 0',
+            '\\dfrac{d}{dx} \\sin x = \\cos x',
+            '\\dfrac{d}{dx} \\cos x = -\\sin x',
+            '\\dfrac{d}{dx} \\tg x = \\dfrac{1}{\\cos^{2}{x}}',
+            '\\dfrac{d}{dx} e^{x} = e^{x}',
+            '\\int x^{n} dx = \\dfrac{x^{n+1}}{n+1} + C, \\ n \\neq -1',
+            '\\int \\dfrac{1}{x} dx = \\ln|x| + C, \\ x \\neq 0',
+            '\\int e^{x} dx = e^{x} + C',
+            '\\lim\\limits_{x \\to \\infty} \\left(1 + \\dfrac{1}{x}\\right)^{x} = e',
+            '\\int_{a}^{b} f(x) dx = F(b) - F(a)',
+            '\\frac{d}{dx} \\int_{a}^{x} f(t) dt = f(x)',
+            
+            // Sequences and Series
+            'a_{n} = a_{1} + (n-1)d, \\ n\\in\\mathbb{N}',
+            'b_{n} = b_{1} q^{n-1}, \\ q\\neq 0',
+            'S_{n} = \\dfrac{a_{1} + a_{n}}{2} \\cdot n',
+            'S_{n} = \\dfrac{2a_{1} + (n-1)d}{2} \\cdot n',
+            'S_{n} = \\dfrac{b_{1}(q^{n} - 1)}{q - 1}, \\ q\\neq 1',
+            'S = \\dfrac{b_{1}}{1 - q}, \\ |q| < 1',
+            
+            // Famous Constants & Identities
+            'e^{i\\pi} + 1 = 0',
+            'e^{i\\alpha} = \\cos\\alpha + i\\sin\\alpha',
+            '(\\cos\\alpha + i\\sin\\alpha)^{n} = \\cos(n\\alpha) + i\\sin(n\\alpha), \\ n\\in\\mathbb{Z}',
+            
+            // Complex Numbers
+            'i^{2} = -1',
+            
+            // Coordinate Geometry
+            'd = \\sqrt{(x_{2} - x_{1})^{2} + (y_{2} - y_{1})^{2}}',
+            'k = \\dfrac{y_{2} - y_{1}}{x_{2} - x_{1}}, \\ x_{1} \\neq x_{2}',
+            'y = kx + b',
+            'M = \\left(\\frac{x_{1} + x_{2}}{2}; \\frac{y_{1} + y_{2}}{2}\\right)',
+            '(x - a)^{2} + (y - b)^{2} = R^{2}',
+            'y = a(x - x_{0})^{2} + y_{0}',
+            '\\dfrac{(x-h)^{2}}{a^{2}} + \\dfrac{(y-k)^{2}}{b^{2}} = 1',
+            '\\dfrac{(x-h)^{2}}{a^{2}} - \\dfrac{(y-k)^{2}}{b^{2}} = 1',
+            
+            'AM = \\dfrac{x_{1} + x_{2} + \\cdots + x_{n}}{n}, \\ n\\in\\mathbb{N}',
+            'GM = \\sqrt[n]{x_{1}\\cdot x_{2} \\cdots x_{n}}, \\ x_{i} \\geq 0 \\ \\forall i \\in \\{1, 2, \\ldots, n\\}, \\ n \\in \\mathbb{N}',
+            'HM = \\dfrac{n}{\\frac{1}{x_{1}} + \\frac{1}{x_{2}} + \\cdots + \\frac{1}{x_{n}}}, \\ x_{i} > 0 \\ \\forall i \\in \\{1, 2, \\ldots, n\\}, \\ n \\in \\mathbb{N}',
+            'RMS = \\sqrt{\\dfrac{x_{1}^{2} + x_{2}^{2} + \\cdots + x_{n}^{2}}{n}}, \\ n\\in\\mathbb{N}',
+            '\\text{RMS} \\geq \\text{AM} \\geq \\text{GM} \\geq \\text{HM}',
+            
+            // Binomial Theorem & Combinatorics
+            '(a + b)^{n} = \\sum_{k=0}^{n} {C_{n}}^{k} a^{n-k}b^{k}, \\ n\\in\\mathbb{N_{0}}',
+            '{C_{n}}^{k} = \\dfrac{n!}{k!(n-k)!}, \\ n,k\\in\\mathbb{N_{0}}, \\ 0 \\leq k \\leq n',
+            'P_{n}^{k} = \\dfrac{n!}{(n-k)!}, \\ n,k\\in\\mathbb{N_{0}}, \\ 0 \\leq k \\leq n',
+            '{C_{n}}^{k} = {C_{n-1}}^{k-1} + {C_{n-1}}^{k}, \\ n,k\\in\\mathbb{N}, \\ 1 \\leq k \\leq n',
+            'n! = \\begin{cases} 1, & n=0 \\\\ n \\times (n-1) \\times \\cdots \\times 1, & n\\in\\mathbb{N} \\end{cases}',
+            
+            // Financial Mathematics
+            'FV = PV(1 + r)^{t}',
+            'FV = PV\\left(1 + \\dfrac{r}{n}\\right)^{nt}',
+            'S = Pe^{rt}',
+            'S = v\\times t',
+            
+            // Set Theory
+            'A \\cup B = \\{x: x \\in A \\text{ կամ } x \\in B\\}',
+            'A \\cap B = \\{x: x \\in A \\text{ և } x \\in B\\}',
+            
+            // Vectors & Matrices
+            '|\\vec{v}| = \\sqrt{x^{2} + y^{2} + z^{2}}',
+            '\\vec{a} \\cdot \\vec{b} = |\\vec{a}| \\cdot |\\vec{b}| \\cos\\alpha',
+            '\\det\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc',
+            
+            // Special Functions
+            '|x| = \\begin{cases} \\ \\ \\ x, & \\text{եթե } x \\geq 0 \\\\ -x, & \\text{եթե } x < 0 \\end{cases}',
+            '\\lfloor x \\rfloor = \\max\\{m\\in \\mathbb{Z} \\mid m \\leq x\\}',
+            '\\lceil x \\rceil = \\min\\{n\\in \\mathbb{Z} \\mid n\\geq x\\}',
+            
+            // Number Theory
+            '\\text{ԱԸԲ}(a;b) \\times \\text{ԱԸԲ}[a;b] = ab, \\ a,b\\in\\mathbb{N}',
+            'n = p_{1}^{a_{1}} \\times p_{2}^{a_{2}}\\times \\cdots \\times p_{k}^{a_{k}}, \\ n\\in \\mathbb{Z}, \\ n>1',
+            
+            // Inequalities
+            '(1+x)^{n} \\geq 1+nx, \\ \\forall x \\geq -1, \\ n\\in \\mathbb{N}',
+            
+            // Summation & Product Notation
+            '\\sum_{i=1}^{n} a_{i} = a_{1} + a_{2} + \\cdots + a_{n}, \\ n\\in\\mathbb{N}',
+            '\\prod_{i=1}^{n} a_{i} = a_{1} \\times a_{2} \\times \\cdots \\times a_{n}, \\ n\\in\\mathbb{N}',
+            
+            // Trigonometric Regression
+            'y = A \\sin(Bx + C) + D',
+            
+            // NEW ADDED FORMULAS
+            '\\arccos x + \\arccos(-x) = \\pi',
+            '\\arcsin x + \\arccos x = \\dfrac{\\pi}{2}',
+            '\\arctg x + \\mathrm{arcctg}\\, x = \\dfrac{\\pi}{2}',
+            '\\arctg 1 + \\arctg 2 + \\arctg 3 = \\pi',
+            '\\mathrm{C}_{n}^{0} + \\mathrm{C}_{n}^{1} + \\mathrm{C}_{n}^{2} + \\dots + \\mathrm{C}_{n}^{n} = 2^{n}, \\ n\\in \\mathbb{N_{0}}',
+            'n! \\approx \\sqrt{2\\pi n}\\cdot \\left(\\frac{n}{e}\\right)^{n}',
+            '[x]+\\left[x+\\frac{1}{n}\\right]+\\left[x+\\frac{2}{n}\\right]+\\dots + \\left[x+\\frac{n-1}{n}\\right]=[nx], \\forall x\\in \\mathbb{R}, \\ n\\in \\mathbb{N}',
+            'y - f(x_{0}) = f\'(x_{0})(x - x_{0})',
+            'y - f(x_{0}) = -\\frac{1}{f\'(x_{0})}(x - x_{0})',
+            '\\tg \\varphi = \\dfrac{k_{2} - k_{1}}{1 + k_{1} \\cdot k_{2}}',
+            '(\\sqrt[n]{x})\' = \\dfrac{1}{n\\sqrt[n]{x^{n-1}}}',
+            '\\sqrt{a \\pm \\sqrt{b}} = \\sqrt{\\frac{a + \\sqrt{a^{2} - b}}{2}} \\pm \\sqrt{\\frac{a - \\sqrt{a^{2} - b}}{2}}, \\ b \\geq 0, \\ a \\geq \\sqrt{b}',
+            'a^{\\log_{a} b} = b, \\ a > 0, \\ a \\neq 1, \\ b > 0',
+            '\\sin 3\\alpha = 3\\sin\\alpha - 4\\sin^{3}\\alpha',
+            '\\cos 3\\alpha = 4\\cos^{3}\\alpha - 3\\cos\\alpha',
+            '\\cos\\alpha \\geq 1 - \\dfrac{\\alpha^{2}}{2}',
+            '\\sin\\alpha \\geq \\alpha - \\dfrac{\\alpha^{3}}{6}, \\ \\alpha \\geq 0'
+        ];
+        
+        const equationContainer = document.getElementById('equationContainer');
+        let currentEquation = 0;
+        
+        // Create two equation elements that will overlap
+        const equation1 = document.createElement('div');
+        equation1.className = 'equation active';
+        equationContainer.appendChild(equation1);
+        
+        const equation2 = document.createElement('div');
+        equation2.className = 'equation';
+        equationContainer.appendChild(equation2);
+        
+        // Render initial equation using KaTeX
+        katex.render(equations[0], equation1, {
+            displayMode: false,
+            throwOnError: false
+        });
+        
+        // Smooth cross-fade transition
+        const cycleEquations = () => {
+            const currentIndex = currentEquation % 2;
+            const nextIndex = (currentEquation + 1) % 2;
+            const currentElement = currentIndex === 0 ? equation1 : equation2;
+            const nextElement = nextIndex === 0 ? equation1 : equation2;
+            
+            // Remove active class from current (fades out)
+            currentElement.classList.remove('active');
+            
+            // Render next equation
+            const nextEquation = equations[(currentEquation + 1) % equations.length];
+            katex.render(nextEquation, nextElement, {
+                displayMode: false,
+                throwOnError: false
+            });
+            
+            // Add active class to next after a tiny delay (fades in)
+            setTimeout(() => {
+                nextElement.classList.add('active');
+                currentEquation = (currentEquation + 1) % equations.length;
+            }, 50);
+        };
+        
+        // Start cycling equations every 5 seconds
+        cycleEquations();
+        setInterval(cycleEquations, 5000);
+        
+        // Button interaction with enhanced effect
+        const ctaButton = document.querySelector('.cta-button');
+        ctaButton.addEventListener('mouseenter', () => {
+            // Create enhanced particle burst effect with new colors
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
                     
-                    // Smooth animation
-                    const duration = 15 + Math.random() * 20;
-                    const delay = Math.random() * 5;
-                    particle.style.animationDuration = `${duration}s`;
-                    particle.style.animationDelay = `${delay}s`;
-                    particle.style.animationTimingFunction = 'cubic-bezier(0.4, 0, 0.6, 1)';
+                    const colors = [
+                        'rgba(0, 255, 255, 0.4)',      // Cyan
+                        'rgba(251, 187, 9, 0.3)',      // Golden yellow
+                        'rgba(9, 92, 225, 0.2)',       // Dark blue
+                        'rgba(40, 167, 69, 0.2)'       // Green
+                    ];
+                    ripple.style.background = colors[Math.floor(Math.random() * colors.length)];
                     
-                    // Add neon pulse effect
-                    particle.style.animation += ', neon-pulse 3s infinite alternate';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'enhanced-ripple 0.8s linear';
+                    ripple.style.width = '120px';
+                    ripple.style.height = '120px';
+                    ripple.style.left = `${Math.random() * 70 + 15}%`;
+                    ripple.style.top = `${Math.random() * 70 + 15}%`;
                     
                     const style = document.createElement('style');
                     style.innerHTML = `
-                        @keyframes neon-pulse {
-                            0%, 100% { 
-                                opacity: 0.9; 
-                                filter: blur(0.5px) brightness(1);
+                        @keyframes enhanced-ripple {
+                            0% {
+                                transform: scale(0);
+                                opacity: 0.8;
+                                filter: blur(0px);
                             }
-                            50% { 
-                                opacity: 0.7; 
-                                filter: blur(0.8px) brightness(1.2);
+                            50% {
+                                opacity: 0.5;
+                                filter: blur(5px);
+                            }
+                            100% {
+                                transform: scale(2.5);
+                                opacity: 0;
+                                filter: blur(10px);
                             }
                         }
                     `;
                     document.head.appendChild(style);
                     
-                    container.appendChild(particle);
+                    ctaButton.appendChild(ripple);
                     
-                    // Clean removal
                     setTimeout(() => {
-                        particle.remove();
+                        ripple.remove();
                         style.remove();
-                    }, (duration + delay) * 1000);
-                }
-            };
-            
-            // Start floating particles
-            createFloatingParticles();
-            // Create new particles every 10 seconds
-            setInterval(createFloatingParticles, 10000);
-            
-            const equations = [
-                // Basic Arithmetic & Algebra
-                'a + b = b + a',
-                'a \\times (b + c) = a \\times b + a \\times c',
-                '(a + b)^2 = a^2 + 2ab + b^2',
-                '(a + b)^3 = a^3 + 3a^{2}b + 3ab^2 + b^3',
-                'a^2 - b^2 = (a + b)(a - b)',
-                'a^{-x} = \\dfrac{1}{a^{x}}, \\ a\\gt 0, \\ x\\in \\mathbb{R}',
-                'a^{x} \\times a^{y} = a^{x+y}, \\ a\\gt 0, \\ x,y\\in \\mathbb{R}',
-                '(a^{x})^{y} = a^{xy}, \\ a\\gt 0, \\ x,y\\in \\mathbb{R}',
-                
-                // Quadratic Formulas
-                'ax^{2} + bx + c = 0',
-                'x = \\dfrac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}',
-                'ax^{4} + bx^{2} + c = 0',
-                'ma^{2x} + na^{x} + p = 0',
-                
-                // Geometry Basics
-                'a^2 + b^2 = c^2',
-                'S_{\\text{շրջան}} = \\pi R^{2}',
-                'C = 2\\pi R',
-                'V_{\\text{սֆերա}} = \\frac{4}{3}\\pi R^{3}',
-                'S_{\\triangle} = \\frac{1}{2}ah_{a}',
-                'S_{▭} = \\small \\text{երկարություն} \\times \\text{լայնություն}',
-                'l_{\\text{աղեղ}} = R\\alpha',
-                'S_{\\text{սեկտոր}} = \\frac{1}{2}Rl',
-                'V_{\\text{կոն}} = \\frac{1}{3}\\pi R^{2}h',
-                'V_{\\text{ուղղանկյունանիստ}} = a \\times b \\times c',
-                'V_{\\text{զուգահեռանիստ}} = S_{\\text{հիմք}} \\times h',
-                'V_{\\text{բուրգ}} = \\frac{1}{3} S_{\\text{հիմք}} \\times h',
-                'S_{\\text{գնդային մակերևույթ}} = 4\\pi R^{2}',
-                'S_{\\text{գլանի լրիվ մակերևույթ}} = 2\\pi R(R + h)',
-                
-                // Trigonometry
-                '\\sin^{2}\\alpha + \\cos^{2}\\alpha = 1',
-                '\\tg \\alpha = \\dfrac{\\sin \\alpha}{\\cos \\alpha}',
-                '\\sin(2\\alpha) = 2\\sin \\alpha \\cos \\alpha',
-                '\\cos(2\\alpha) = \\cos^{2}\\alpha - \\sin^{2}\\alpha',
-                '\\sin(\\alpha + \\beta) = \\sin \\alpha \\cos \\beta + \\cos \\alpha \\sin \\beta',
-                '\\cos(\\alpha + \\beta) = \\cos \\alpha \\cos \\beta - \\sin \\alpha \\sin \\beta',
-                '\\dfrac{a}{\\sin \\angle A} = \\dfrac{b}{\\sin \\angle B} = \\dfrac{c}{\\sin \\angle C}=2R',
-                'a^{2} = b^{2} + c^{2} - 2bc \\cos \\alpha',
-                'S_{\\triangle} = \\sqrt{p(p-a)(p-b)(p-c)}, \\ p = \\dfrac{a+b+c}{2}',
-                
-                // Logarithms
-                '\\log_{a}{b} = \\dfrac{\\log_{c}{b}}{\\log_{c}{a}}, \\ a, b, c > 0, \\ a, c \\neq 1',
-                
-                // Calculus Basics
-                '\\dfrac{d}{dx} x^{\\alpha} = \\alpha x^{\\alpha-1}, \\ \\alpha\\in\\mathbb{R}, \\ x\\gt 0',
-                '\\dfrac{d}{dx} \\sin x = \\cos x',
-                '\\dfrac{d}{dx} \\cos x = -\\sin x',
-                '\\dfrac{d}{dx} \\tg x = \\dfrac{1}{\\cos^{2}{x}}',
-                '\\dfrac{d}{dx} e^{x} = e^{x}',
-                '\\int x^{n} dx = \\dfrac{x^{n+1}}{n+1} + C, \\ n \\neq -1',
-                '\\int \\dfrac{1}{x} dx = \\ln|x| + C, \\ x \\neq 0',
-                '\\int e^{x} dx = e^{x} + C',
-                '\\lim\\limits_{x \\to \\infty} \\left(1 + \\dfrac{1}{x}\\right)^{x} = e',
-                '\\int_{a}^{b} f(x) dx = F(b) - F(a)',
-                '\\frac{d}{dx} \\int_{a}^{x} f(t) dt = f(x)',
-                
-                // Sequences and Series
-                'a_{n} = a_{1} + (n-1)d, \\ n\\in\\mathbb{N}',
-                'b_{n} = b_{1} q^{n-1}, \\ q\\neq 0',
-                'S_{n} = \\dfrac{a_{1} + a_{n}}{2} \\cdot n',
-                'S_{n} = \\dfrac{2a_{1} + (n-1)d}{2} \\cdot n',
-                'S_{n} = \\dfrac{b_{1}(q^{n} - 1)}{q - 1}, \\ q\\neq 1',
-                'S = \\dfrac{b_{1}}{1 - q}, \\ |q| < 1',
-                
-                // Famous Constants & Identities
-                'e^{i\\pi} + 1 = 0',
-                'e^{i\\alpha} = \\cos\\alpha + i\\sin\\alpha',
-                '(\\cos\\alpha + i\\sin\\alpha)^{n} = \\cos(n\\alpha) + i\\sin(n\\alpha), \\ n\\in\\mathbb{Z}',
-                
-                // Complex Numbers
-                'i^{2} = -1',
-                
-                // Coordinate Geometry
-                'd = \\sqrt{(x_{2} - x_{1})^{2} + (y_{2} - y_{1})^{2}}',
-                'k = \\dfrac{y_{2} - y_{1}}{x_{2} - x_{1}}, \\ x_{1} \\neq x_{2}',
-                'y = kx + b',
-                'M = \\left(\\frac{x_{1} + x_{2}}{2}; \\frac{y_{1} + y_{2}}{2}\\right)',
-                '(x - a)^{2} + (y - b)^{2} = R^{2}',
-                'y = a(x - x_{0})^{2} + y_{0}',
-                '\\dfrac{(x-h)^{2}}{a^{2}} + \\dfrac{(y-k)^{2}}{b^{2}} = 1',
-                '\\dfrac{(x-h)^{2}}{a^{2}} - \\dfrac{(y-k)^{2}}{b^{2}} = 1',
-                
-                'AM = \\dfrac{x_{1} + x_{2} + \\cdots + x_{n}}{n}, \\ n\\in\\mathbb{N}',
-                'GM = \\sqrt[n]{x_{1}\\cdot x_{2} \\cdots x_{n}}, \\ x_{i} \\geq 0 \\ \\forall i \\in \\{1, 2, \\ldots, n\\}, \\ n \\in \\mathbb{N}',
-                'HM = \\dfrac{n}{\\frac{1}{x_{1}} + \\frac{1}{x_{2}} + \\cdots + \\frac{1}{x_{n}}}, \\ x_{i} > 0 \\ \\forall i \\in \\{1, 2, \\ldots, n\\}, \\ n \\in \\mathbb{N}',
-                'RMS = \\sqrt{\\dfrac{x_{1}^{2} + x_{2}^{2} + \\cdots + x_{n}^{2}}{n}}, \\ n\\in\\mathbb{N}',
-                '\\text{RMS} \\geq \\text{AM} \\geq \\text{GM} \\geq \\text{HM}',
-                
-                // Binomial Theorem & Combinatorics
-                '(a + b)^{n} = \\sum_{k=0}^{n} {C_{n}}^{k} a^{n-k}b^{k}, \\ n\\in\\mathbb{N_{0}}',
-                '{C_{n}}^{k} = \\dfrac{n!}{k!(n-k)!}, \\ n,k\\in\\mathbb{N_{0}}, \\ 0 \\leq k \\leq n',
-                'P_{n}^{k} = \\dfrac{n!}{(n-k)!}, \\ n,k\\in\\mathbb{N_{0}}, \\ 0 \\leq k \\leq n',
-                '{C_{n}}^{k} = {C_{n-1}}^{k-1} + {C_{n-1}}^{k}, \\ n,k\\in\\mathbb{N}, \\ 1 \\leq k \\leq n',
-                'n! = \\begin{cases} 1, & n=0 \\\\ n \\times (n-1) \\times \\cdots \\times 1, & n\\in\\mathbb{N} \\end{cases}',
-                
-                // Financial Mathematics
-                'FV = PV(1 + r)^{t}',
-                'FV = PV\\left(1 + \\dfrac{r}{n}\\right)^{nt}',
-                'S = Pe^{rt}',
-                'S = v\\times t',
-                
-                // Set Theory
-                'A \\cup B = \\{x: x \\in A \\text{ կամ } x \\in B\\}',
-                'A \\cap B = \\{x: x \\in A \\text{ և } x \\in B\\}',
-                
-                // Vectors & Matrices
-                '|\\vec{v}| = \\sqrt{x^{2} + y^{2} + z^{2}}',
-                '\\vec{a} \\cdot \\vec{b} = |\\vec{a}| \\cdot |\\vec{b}| \\cos\\alpha',
-                '\\det\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} = ad - bc',
-                
-                // Special Functions
-                '|x| = \\begin{cases} \\ \\ \\ x, & \\text{եթե } x \\geq 0 \\\\ -x, & \\text{եթե } x < 0 \\end{cases}',
-                '\\lfloor x \\rfloor = \\max\\{m\\in \\mathbb{Z} \\mid m \\leq x\\}',
-                '\\lceil x \\rceil = \\min\\{n\\in \\mathbb{Z} \\mid n\\geq x\\}',
-                
-                // Number Theory
-                '\\text{ԱԸԲ}(a;b) \\times \\text{ԱԸԲ}[a;b] = ab, \\ a,b\\in\\mathbb{N}',
-                'n = p_{1}^{a_{1}} \\times p_{2}^{a_{2}}\\times \\cdots \\times p_{k}^{a_{k}}, \\ n\\in \\mathbb{Z}, \\ n>1',
-                
-                // Inequalities
-                '(1+x)^{n} \\geq 1+nx, \\ \\forall x \\geq -1, \\ n\\in \\mathbb{N}',
-                
-                // Summation & Product Notation
-                '\\sum_{i=1}^{n} a_{i} = a_{1} + a_{2} + \\cdots + a_{n}, \\ n\\in\\mathbb{N}',
-                '\\prod_{i=1}^{n} a_{i} = a_{1} \\times a_{2} \\times \\cdots \\times a_{n}, \\ n\\in\\mathbb{N}',
-                
-                // Trigonometric Regression
-                'y = A \\sin(Bx + C) + D',
-                
-                // NEW ADDED FORMULAS
-                '\\arccos x + \\arccos(-x) = \\pi',
-                '\\arcsin x + \\arccos x = \\dfrac{\\pi}{2}',
-                '\\arctg x + \\mathrm{arcctg}\\, x = \\dfrac{\\pi}{2}',
-                '\\arctg 1 + \\arctg 2 + \\arctg 3 = \\pi',
-                '\\mathrm{C}_{n}^{0} + \\mathrm{C}_{n}^{1} + \\mathrm{C}_{n}^{2} + \\dots + \\mathrm{C}_{n}^{n} = 2^{n}, \\ n\\in \\mathbb{N_{0}}',
-                'n! \\approx \\sqrt{2\\pi n}\\cdot \\left(\\frac{n}{e}\\right)^{n}',
-                '[x]+\\left[x+\\frac{1}{n}\\right]+\\left[x+\\frac{2}{n}\\right]+\\dots + \\left[x+\\frac{n-1}{n}\\right]=[nx], \\forall x\\in \\mathbb{R}, \\ n\\in \\mathbb{N}',
-                'y - f(x_{0}) = f\'(x_{0})(x - x_{0})',
-                'y - f(x_{0}) = -\\frac{1}{f\'(x_{0})}(x - x_{0})',
-                '\\tg \\varphi = \\dfrac{k_{2} - k_{1}}{1 + k_{1} \\cdot k_{2}}',
-                '(\\sqrt[n]{x})\' = \\dfrac{1}{n\\sqrt[n]{x^{n-1}}}',
-                '\\sqrt{a \\pm \\sqrt{b}} = \\sqrt{\\frac{a + \\sqrt{a^{2} - b}}{2}} \\pm \\sqrt{\\frac{a - \\sqrt{a^{2} - b}}{2}}, \\ b \\geq 0, \\ a \\geq \\sqrt{b}',
-                'a^{\\log_{a} b} = b, \\ a > 0, \\ a \\neq 1, \\ b > 0',
-                '\\sin 3\\alpha = 3\\sin\\alpha - 4\\sin^{3}\\alpha',
-                '\\cos 3\\alpha = 4\\cos^{3}\\alpha - 3\\cos\\alpha',
-                '\\cos\\alpha \\geq 1 - \\dfrac{\\alpha^{2}}{2}',
-                '\\sin\\alpha \\geq \\alpha - \\dfrac{\\alpha^{3}}{6}, \\ \\alpha \\geq 0'
-            ];
-            
-            const equationContainer = document.getElementById('equationContainer');
-            let currentEquation = 0;
-            
-            // Create two equation elements that will overlap
-            const equation1 = document.createElement('div');
-            equation1.className = 'equation active';
-            equationContainer.appendChild(equation1);
-            
-            const equation2 = document.createElement('div');
-            equation2.className = 'equation';
-            equationContainer.appendChild(equation2);
-            
-            // Render initial equation using KaTeX
-            katex.render(equations[0], equation1, {
-                displayMode: false,
-                throwOnError: false
-            });
-            
-            // Smooth cross-fade transition
-            const cycleEquations = () => {
-                const currentIndex = currentEquation % 2;
-                const nextIndex = (currentEquation + 1) % 2;
-                const currentElement = currentIndex === 0 ? equation1 : equation2;
-                const nextElement = nextIndex === 0 ? equation1 : equation2;
-                
-                // Remove active class from current (fades out)
-                currentElement.classList.remove('active');
-                
-                // Render next equation
-                const nextEquation = equations[(currentEquation + 1) % equations.length];
-                katex.render(nextEquation, nextElement, {
-                    displayMode: false,
-                    throwOnError: false
-                });
-                
-                // Add active class to next after a tiny delay (fades in)
-                setTimeout(() => {
-                    nextElement.classList.add('active');
-                    currentEquation = (currentEquation + 1) % equations.length;
-                }, 50);
-            };
-            
-            // Start cycling equations every 5 seconds
-            cycleEquations();
-            setInterval(cycleEquations, 5000);
-            
-            // Button interaction with enhanced effect
-            const ctaButton = document.querySelector('.cta-button');
-            ctaButton.addEventListener('mouseenter', () => {
-                // Create enhanced particle burst effect with new colors
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(() => {
-                        const ripple = document.createElement('span');
-                        ripple.style.position = 'absolute';
-                        ripple.style.borderRadius = '50%';
-                        
-                        const colors = [
-                            'rgba(0, 255, 255, 0.4)',      // Cyan
-                            'rgba(251, 187, 9, 0.3)',      // Golden yellow
-                            'rgba(9, 92, 225, 0.2)',       // Dark blue
-                            'rgba(40, 167, 69, 0.2)'       // Green
-                        ];
-                        ripple.style.background = colors[Math.floor(Math.random() * colors.length)];
-                        
-                        ripple.style.transform = 'scale(0)';
-                        ripple.style.animation = 'enhanced-ripple 0.8s linear';
-                        ripple.style.width = '120px';
-                        ripple.style.height = '120px';
-                        ripple.style.left = `${Math.random() * 70 + 15}%`;
-                        ripple.style.top = `${Math.random() * 70 + 15}%`;
-                        
-                        const style = document.createElement('style');
-                        style.innerHTML = `
-                            @keyframes enhanced-ripple {
-                                0% {
-                                    transform: scale(0);
-                                    opacity: 0.8;
-                                    filter: blur(0px);
-                                }
-                                50% {
-                                    opacity: 0.5;
-                                    filter: blur(5px);
-                                }
-                                100% {
-                                    transform: scale(2.5);
-                                    opacity: 0;
-                                    filter: blur(10px);
-                                }
-                            }
-                        `;
-                        document.head.appendChild(style);
-                        
-                        ctaButton.appendChild(ripple);
-                        
-                        setTimeout(() => {
-                            ripple.remove();
-                            style.remove();
-                        }, 800);
-                    }, i * 100);
-                }
-            });
-        }
-
-        // ONLY ADDITION: ensure Three.js runs after DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
-        }
+                    }, 800);
+                }, i * 100);
+            }
+        });
     </script>
 </body>
 </html>
